@@ -314,7 +314,6 @@ def shop():
         clear()
 
 def acquire(slot,cat):
-    #This is a little messy and repeats sometimes but it is what it is
     if cat == "melee":  #Player will always have a melee weapon, so always ask for confirmation
         print("Taking the "+slot[0]+" will replace the currently equipped "+player.wep.name+".\nThe "+player.wep.name+"'s stats are listed below for comparison.\n")
         display_melee(player)
