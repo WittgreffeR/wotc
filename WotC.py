@@ -292,21 +292,22 @@ def shop():
 
             if choice == "n":
                 repeat = False
-            
+                
             else:
                 choice = int(choice)
                 choice -= 1
 
-                if ((categories[choice] == "melee" and player.favour < slots[choice][7])
-                        or (categories[choice] == "ranged" and player.favour < slots[choice][6])
-                        or (categories[choice] == "magic" and player.favour < slots[choice][6])
-                        or (categories[choice] == "item" and player.favour < slots[choice][4])):
-                    input(player.name+" does not have enough "+colour.GOLD+"Favour"+colour.END+" for the "+slots[choice][0]+"! ")
-                else:
-                    cont = acquire(slots[choice],categories[choice])
-                    if cont == True:
-                        input(player.name+" has acquired the "+player.wep.name+". ")
-        
+            if ((categories[choice] == "melee" and player.favour < slots[choice][7])
+                    or (categories[choice] == "ranged" and player.favour < slots[choice][6])
+                    or (categories[choice] == "magic" and player.favour < slots[choice][6])
+                    or (categories[choice] == "item" and player.favour < slots[choice][4])):
+                input(player.name+" does not have enough "+colour.GOLD+"Favour"+colour.END+" for the "+slots[choice][0]+"! ")
+            else:
+                cont = acquire(slots[choice],categories[choice])
+                if cont == True:
+                    input(player.name+" has acquired the "+slots[choice][0]+". ")
+                    slots.pop(choice)
+            
         except:
             input("Invalid input! ")
 
@@ -318,7 +319,7 @@ def acquire(slot,cat):
         print("Taking the "+slot[0]+" will replace the currently equipped "+player.wep.name+".\nThe "+player.wep.name+"'s stats are listed below for comparison.\n")
         display_melee(player)
         
-        approve = input("Are you sure you want to buy the "+slot[0]+"? ")
+        approve = input("\nAre you sure you want to buy the "+slot[0]+"? ")
         approve = approve.lower()
         if approve == "y" or approve == "yes":
             pick_melee(slot)
@@ -330,7 +331,7 @@ def acquire(slot,cat):
         print("Taking the "+slot[0]+" will replace the currently equipped "+player.ranged.name+".\nThe "+player.ranged.name+"'s stats are listed below for comparison.\n")
         display_ranged(player)
 
-        approve = input("Are you sure you want to buy the "+slot[0]+"? ")
+        approve = input("\nAre you sure you want to buy the "+slot[0]+"? ")
         approve = approve.lower()
         if approve == "y" or approve == "yes":
             pick_ranged(slot)
@@ -387,6 +388,9 @@ def acquire(slot,cat):
             cont = True
         except:
             cont = False
+            
+    else:   #If there is nothing to confirm then go right ahead
+        cont = True
 
     return cont
 
