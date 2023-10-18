@@ -170,28 +170,28 @@ def confirm_race(race):     #Defined as a seprate function to avoid repeating my
         race = ""
         return race
 
-def player_stat_setup(player):  #Separate function to avoid clutter
-    if player.race == "Orc":
-        player.health = 120
-        player.max_health = 120
-        player.energy = 110
-        player.max_energy = 110
-        player.arm_eff = 20
-        player.max_eff = 40
+def race_stat_setup(guy):  #Separate function to avoid clutter
+    if guy.race == "Orc":
+        guy.health = 120
+        guy.max_health = 120
+        guy.energy = 110
+        guy.max_energy = 110
+        guy.arm_eff = 20
+        guy.max_eff = 40
 
     elif player.race == "Elf":
-        player.health = 90
-        player.max_health = 90
-        player.max_armour = 90
-        player.e_regen = 6
+        guy.health = 90
+        guy.max_health = 90
+        guy.max_armour = 90
+        guy.e_regen = 6
 
     elif player.race == "Limka":
-        player.health = 80
-        player.max_health = 80
-        player.max_armour = 70
-        player.max_eff = 60
-        player.e_regen = 7
-        player.dodge = 6
+        guy.health = 80
+        guy.max_health = 80
+        guy.max_armour = 70
+        guy.max_eff = 60
+        guy.e_regen = 7
+        guy.dodge = 6
 
 
 ##SHOP
@@ -281,7 +281,7 @@ def shop():
     repeat = True
     
     while repeat == True:
-        print("DREAD SHRINE\n\nYour aspiring champion "+player.name+" kneels before a shrine dedicated to you and humbly asks for boons.\nHere, the aspirant exchanges "+colour.GOLD+"Favour"+colour.END+" for gifts.")
+        print("DREAD SHRINE\n\nYour aspiring champion "+player.name+" kneels before a shrine dedicated to you and humbly asks for boons.\nHere, the aspirant can exchange "+colour.GOLD+"Favour"+colour.END+" for gifts.")
         print("Four gifts are available to choose from. Choose which one to bestow upon "+player.name+" - provided they have enough "+colour.GOLD+"Favour"+colour.END+".\n\n")
 
         print_shop(slots, categories, True)
@@ -292,7 +292,7 @@ def shop():
 
             if choice == "n":
                 repeat = False
-                    
+            
             else:
                 choice = int(choice)
                 choice -= 1
@@ -306,7 +306,7 @@ def shop():
                     cont = acquire(slots[choice],categories[choice])
                     if cont == True:
                         input(player.name+" has acquired the "+player.wep.name+". ")
-                
+        
         except:
             input("Invalid input! ")
 
@@ -315,7 +315,7 @@ def shop():
 def acquire(slot,cat):
     #This is a little messy and repeats sometimes but it is what it is
     if cat == "melee":  #Player will always have a melee weapon, so always ask for confirmation
-        input("Taking the "+slot[0]+" will replace the currently equipped "+player.wep.name+".\nThe "+player.wep.name+"'s stats are listed below for comparison.\n")
+        print("Taking the "+slot[0]+" will replace the currently equipped "+player.wep.name+".\nThe "+player.wep.name+"'s stats are listed below for comparison.\n")
         display_melee(player)
         
         approve = input("Are you sure you want to buy the "+slot[0]+"? ")
@@ -327,7 +327,7 @@ def acquire(slot,cat):
             cont = False
         
     elif cat == "ranged" and not player.ranged.name == "":  #Only ask for confirmation if player has a ranged weapon
-        input("Taking the "+slot[0]+" will replace the currently equipped "+player.ranged.name+".\nThe "+player.ranged.name+"'s stats are listed below for comparison.\n")
+        print("Taking the "+slot[0]+" will replace the currently equipped "+player.ranged.name+".\nThe "+player.ranged.name+"'s stats are listed below for comparison.\n")
         display_ranged(player)
 
         approve = input("Are you sure you want to buy the "+slot[0]+"? ")
@@ -338,6 +338,55 @@ def acquire(slot,cat):
         else:
             cont = False
     
+    elif cat == "magic" and len(player.magics) == 3:    #Only ask for confirmation if player is at maximum 3 magics
+        clear() #This confirmation takes up a lot of space, so clear the screen and enter a "new window"
+        print(player.name+" is trying to acquire a new magical technique, but they already have the maximum of three. One must be discarded to continue.")
+        print("The technique "+player.name+" is trying to acquire is:\n")
+        print(slot[0], end="")
+        display_magic_name(slot)
+        display_magic_stats(slot)
+        print("\nThe techniques "+player.name+"already has are:\n")
+
+        for x in range(0,len(player.magics)):
+            print(str(x+1)+". "+player.magics[x][0], end="")
+            display_magic_name(player.magics[x])
+            display_magic_stats(player.magics[x])
+            print("")
+        
+        approve = input("Choose the number of the technique to discard, or type anything else to cancel. ")
+        try:
+            approve = int(approve)
+            approve -= 1
+            player.magics.pop(approve)
+            player.magics.append(slot)
+            cont = True
+        except:
+            cont = False
+
+    elif cat == "item" and len(player.items) == 5:  #Only ask for confirmation if player is at maximum 5 items
+        clear() #This confirmation takes up a lot of space, so clear the screen and enter a "new window"
+        print(player.name+" is trying to acquire a new item, but they already have the maximum of five. One must be discarded to continue.")
+        print("The item "+player.name+" is trying to acquire is:\n")
+        print(slot[0], end="")
+        display_item_name(slot)
+        display_item_stats(slot)
+        print("\nThe items "+player.name+"already has are:\n")
+
+        for x in range(0,len(player.items)):
+            print(str(x+1)+". "+player.items[x][0], end="")
+            display_item_name(player.items[x])
+            display_item_stats(player.items[x])
+            print("")
+        
+        approve = input("Choose the number of the item to discard, or type anything else to cancel. ")
+        try:
+            approve = int(approve)
+            approve -= 1
+            player.items.pop(approve)
+            player.items.append(slot)
+            cont = True
+        except:
+            cont = False
 
     return cont
 
@@ -379,13 +428,62 @@ def display_ranged(guy):
     print("\tCritical Shot Chance: "+colour.GOLD+str(guy.ranged.crit_chance)+"%"+colour.END)
     print("\tCritical Damage Bonus: "+colour.RED+str(guy.ranged.crit_bonus)+"%"+colour.END)
 
-def print_shop(slots, categories, showcost):   #This can't use the display_X functions because they display from the Char class and not lists, so they're incompatible
+def display_magic_name(mage):
+    if mage[1] == "plasma":
+        print(" (Plasma Magic)")
+    elif mage[1] == "shadow":
+        print(" (Shadow Magic)")
+    elif mage[1] == "plague":
+        print(" (Plague Magic)")
+    elif mage[1] == "frost":
+        print(" (Frost Magic)")
+    elif mage[1] == "heal":
+        print(" (Healing Magic)")
+    else:
+        print(" (Shield Magic)")
+
+def display_magic_stats(mage):  
+    if mage[1] == "plasma" or mage[1] == "shadow" or mage[1] == "plague" or mage[1] == "frost":
+        print("\tDamage: "+colour.RED+str(mage[2])+colour.END)
+    elif mage[1] == "heal":
+        print("\tHealing: "+colour.GREEN+str(mage[2])+colour.END)
+    else:
+        print("\tArmour: "+colour.PURPLE+str(mage[2])+colour.END)
+
+    if mage[4] > 0:
+        print("\tDamage over Time: "+colour.RED+str(mage[4])+colour.END)
+        print("\tDamage over Time Duration: "+colour.RED+str(mage[5])+colour.END+" turns")
+
+def display_item_name(thing):
+    if thing[1] == "armour":
+        print(" (Armour)")
+    else:
+        print(" (Item)")
+
+def display_item_stats(thing):
+    if thing[1] == "dmg":
+        print("\tDamage: "+colour.RED+str(thing[2])+colour.END)
+    elif thing[1] == "heal":
+        print("\tHealing: "+colour.GREEN+str(thing[2])+colour.END)
+    elif thing[1] == "energy":
+        print("\tEnergy Restored: "+colour.BLUE+str(thing[2])+colour.END)
+    elif thing[1] == "armour":
+        print("\tArmour: "+colour.PURPLE+str(thing[2])+colour.END)
+    else:
+        print("\tFavour Gain: "+colour.GOLD+str(thing[2])+colour.END)
+
+    if thing[3] > 0:
+        print("\tArmour Efficiency Added: "+colour.PURPLE+str(thing[3])+"%"+colour.END)
+
+#Print out things available in shop
+def print_shop(slots, categories, showcost):
     for x in range (0,len(slots)):
-        g = 6   #the position that favour cost is stored in
+        g = 6   #the list position that favour cost is stored in
         
         print(str(x+1)+". "+slots[x][0], end="")
 
         #Compare slots list to categories list to display information correctly
+        #Both melee and ranged display functions take variables from Char class and not list so they cant be used here
         if categories[x] == "melee":
             g = 7
             print(" (Melee Weapon)")
@@ -404,53 +502,16 @@ def print_shop(slots, categories, showcost):   #This can't use the display_X fun
             print("\tCritical Shot Chance: "+colour.GOLD+str(slots[x][4])+"%"+colour.END)
             print("\tCritical Damage Bonus: "+colour.RED+str(slots[x][5])+"%"+colour.END)
 
-        #this is a long one
+        #this can be done through functions
         elif categories[x] == "magic":
-            if slots[x][1] == "plasma":
-                print(" (Plasma Magic)")
-            elif slots[x][1] == "shadow":
-                print(" (Shadow Magic)")
-            elif slots[x][1] == "plague":
-                print(" (Plague Magic)")
-            elif slots[x][1] == "frost":
-                print(" (Frost Magic)")
-            elif slots[x][1] == "heal":
-                print(" (Healing Magic)")
-            else:
-                print(" (Shield Magic)")
-                
-            if slots[x][1] == "plasma" or slots[x][1] == "shadow" or slots[x][1] == "plague" or slots[x][1] == "frost":
-                print("\tDamage: "+colour.RED+str(slots[x][2])+colour.END)
-            elif slots[x][1] == "heal":
-                print("\tHealing: "+colour.GREEN+str(slots[x][2])+colour.END)
-            else:
-                print("\tArmour: "+colour.PURPLE+str(slots[x][2])+colour.END)
+            display_magic_name(slots[x])
+            display_magic_stats(slots[x])
 
-            if slots[x][4] > 0:
-                print("\tDamage over Time: "+colour.RED+str(slots[x][4])+colour.END)
-                print("\tDamage over Time Duration: "+colour.RED+str(slots[x][5])+colour.END+" turns")
-
-        #another long one
+        #so can this
         else:
             g = 4
-            if slots[x][1] == "armour":
-                print(" (Armour)")
-            else:
-                print(" (Item)")
-
-            if slots[x][1] == "dmg":
-                print("\tDamage: "+colour.RED+str(slots[x][2])+colour.END)
-            elif slots[x][1] == "heal":
-                print("\tHealing: "+colour.GREEN+str(slots[x][2])+colour.END)
-            elif slots[x][1] == "energy":
-                print("\tEnergy Restored: "+colour.BLUE+str(slots[x][2])+colour.END)
-            elif slots[x][1] == "armour":
-                print("\tArmour: "+colour.PURPLE+str(slots[x][2])+colour.END)
-            else:
-                print("\tFavour Gain: "+colour.GOLD+str(slots[x][2])+colour.END)
-
-            if slots[x][3] > 0:
-                print("\tArmour Efficiency Added: "+colour.PURPLE+str(slots[x][3])+"%"+colour.END)
+            display_item_name(slots[x])
+            display_item_stats(slots[x])
 
         if showcost == True:
             print("\tFavour Cost: "+colour.GOLD+str(slots[x][g])+colour.END)
@@ -468,7 +529,7 @@ if len(player_name) < 3:
         player_name = input("Your champion's name must be at least three letters long. ")
 player_race = choose_race()
 player = Char(player_name,player_race)
-player_stat_setup(player)
+race_stat_setup(player)
 input("\nAnd so, "+player.name+" the "+player.race+" enters the fray. ")
 clear()
 weapon_select()
