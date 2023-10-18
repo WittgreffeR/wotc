@@ -1,0 +1,12 @@
+Weak Healing Potion,heal,10,0,5
+Throwing Knife,dmg,20,0,6
+Sharp Rock,dmg,10,0,3
+Grenade,dmg,35,0,10
+Weak Stamina Potion,energy,10,0,5
+Bitter Black Brew,energy,20,0,6
+Sweet Treat,energy,8,0,2
+Cheap Mail,armour,10,0,5
+Riveted Mail,armour,25,0,9
+Welded Mail,armour,30,2,12
+Sacred Statuette,favour,1,0,5
+Graven Image,favour,1,0,6
