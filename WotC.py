@@ -1,78 +1,45 @@
+#Core
 import random
 import os
 
-###TEXT VISUALS
-class colour:   #Colours only display properly when run directly from the file, they bug out in shell
-    GREEN = "\033[92m"      #Health and healing
-    RED = "\033[91m"        #Damage
-    GOLD = "\033[93m"       #Favour + Crit Chance
-    BLUE = "\033[94m"       #Energy
-    CYAN = "\033[96m"       #Ammunition or use limit
-    PURPLE = "\033[95m"     #Armour
-    END = "\033[0m"         #Stop use of colour (return to white)
-    
-#Colours are used like this:    "text"+colour.RED+"text"+colour.END
-
-def clear():    #Clear the screen - only works if run directly from the file, does NOT work in python shell
-    if os.name == "nt":
-        _ = os.system("cls")
-
-    else:
-        _ = os.system("clear")
-
+#Modular functions stored in Functions folder to reduce clutter in this main script
+import Functions.text_import as ti
+import Functions.racial as r
+import Functions.display as display
+import Functions.shop as sh
+from Functions.visual import clear, colour  #I don't want clear and colour to have a prefix
 
 ###READ FROM TXT FILES
-my_location = os.path.dirname(__file__) #Where the script is located
+male_names = ti.read_from_file("Data/Names/MaleNames.txt")
 
-#Condensing these into functions to reduce clutter
-def read_from_file(relative_location): 
-    with open(os.path.join(my_location,relative_location), "r") as read_file:
-        export = read_file.read().split("\n")
-    return export
-
-def file_to_list(importlist, dlist, start, stop):
-    for x in range (0,len(importlist)):
-        join = list(importlist[x].split(","))
-        for i in range (start,stop):
-            join[i] = int(join[i])
-        dlist.append(join)
-
-        
-male_names = read_from_file("Data/Names/MaleNames.txt")
-
-female_names = read_from_file("Data/Names/FemaleNames.txt")
+female_names = ti.read_from_file("Data/Names/FemaleNames.txt")
 
 melee_weps = []
-all_melee = read_from_file("Data/Weapons/Melee.txt")
-file_to_list(all_melee,melee_weps,1,8)
-melee_count = len(melee_weps)-1
+ti.file_to_list("Data/Weapons/Melee.txt",melee_weps,1,8)
 
 #Melee weapon values in file:
 #[name,light_dmg,heavy_dmg,light_cost,heavy_cost,crit_chance,crit_bonus,favour]
 
 
 ranged_weps = []
-all_ranged = read_from_file("Data/Weapons/Ranged.txt")
-file_to_list(all_ranged,ranged_weps,1,7)
-ranged_count = len(ranged_weps)-1
+ti.file_to_list("Data/Weapons/Ranged.txt",ranged_weps,1,7)
 
 #Ranged weapon values in file:
-#[name,dmg,cost,ammo,crit_chance,crit_bonus,favour]
+#[name,dmg,cost,ammo,crit_chance,crit_bonus,favour,free/ban]
+#Some ranged weapons are banned for opponents, this is what free/ban means
+#Technically only the "free" matters, any other entry than "free" in slot 7 is read as banned
 
 
 magic = []
-all_mage = read_from_file("Data/Weapons/Magic.txt")
-file_to_list(all_mage,magic,2,7)
-magic_count = len(magic)-1
+ti.file_to_list("Data/Weapons/Magic.txt",magic,2,7)
 
 #Magic values in file:
 #[name,type,cost,dmg/heal/armour, dot, dot duration,favour]
 #Types: plasma, shadow, plague, frost, heal, shield
 
+
 item = []
-all_item = read_from_file("Data/Weapons/Item.txt")
-file_to_list(all_item,item,2,5)
-item_count = len(item)-1
+ti.file_to_list("Data/Weapons/Item.txt",item,2,5)
 
 #Item values in file:
 #[name,type,dmg/heal/energy/armour/favour gain, armour efficiency,favour]
@@ -101,98 +68,21 @@ class Char:
 
     class wep:  #melee weapon
         name = ""
-        light_dmg = 10
-        heavy_dmg = 15
-        light_cost = 8
-        heavy_cost = 16
-        crit_chance = 4
-        crit_bonus = 20
+        light_dmg = int
+        heavy_dmg = int
+        light_cost = int
+        heavy_cost = int
+        crit_chance = int
+        crit_bonus = int
 
     class ranged:   #ranged weapon
         name = ""
-        dmg = 10
-        cost = 6
-        ammo = 8
-        max_ammo = 8
-        crit_chance = 4
-        crit_bonus = 20
-
-
-def choose_race():
-    player_race = ""
-
-    while player_race == "":
-        clear()
-        print("""As a Dread Titan, you can draw from any of the mortal races to create a new champion.\n
-        """+colour.GOLD+"""Humans"""+colour.END+""" are mundane and average, but are great in numbers and are known for their tenacity and adaptability.\n
-        """+colour.GOLD+"""Orcs"""+colour.END+""" are strong and hardy, but their intimidating size also makes them an easy target.\n
-        """+colour.GOLD+"""Elves"""+colour.END+""" are slender and a little frail, but are blessed with magic and impressive stamina.\n
-        """+colour.GOLD+"""Limkas"""+colour.END+""" are small in stature, but are agile and nimble.\n
-        """)
-        player_race = input("What race does your champion hail from? ")
-        player_race = player_race.lower()
-
-        if player_race == "human" or player_race == "humans" or player_race == "man" or player_race == "men" or player_race == "mankind" or player_race == "humanity":
-            print("\nHumans have no special buffs or debuffs; they have 100 health, 100 energy and regenerate 5 energy per turn.")
-            player_race = "Human"
-            player_race = confirm_race(player_race)
-            
-        elif player_race == "orc" or player_race == "orcs" or player_race == "orcish":
-            print("\nOrcs have a higher health of 120 and a higher energy of 110, and regenerate 5 energy per turn as normal. However, their armour efficiency is reduced by 10% and cannot go above 40%, and their starting dodge chance is reduced to 3%.")
-            player_race = "Orc"
-            player_race = confirm_race(player_race)
-
-        elif player_race == "elf" or player_race == "elves" or player_race == "elvish" or player_race == "elfkin" or player_race == "elfkind":
-            print("\nElves have a lower health of 90 and a lower maximum armour of 90. However, they regenerate 6 energy per turn rather than 5, and all magic costs 25% less energy to use.")
-            player_race = "Elf"
-            player_race = confirm_race(player_race)
-
-        elif player_race == "limka" or player_race == "limkas" or player_race == "limkian":
-            print("\nThe small Limkas have a lower health of 80 and a lower maximum armour of 70. However, they regenerate 7 stamina per turn rather than 5, their armour efficiency can go up to 60%, and they have an increased starting dodge chance of 6%.")
-            player_race = "Limka"
-            player_race = confirm_race(player_race)
-
-        else:
-            player_race = ""
-            input("\nInput not recognised. ")
-
-    return player_race
-    
-
-def confirm_race(race):     #Defined as a seprate function to avoid repeating myself
-    confirm = input("\nAre you sure you want to continue as a "+race+"? ")
-    confirm = confirm.lower()
-
-    if confirm == "yes" or confirm == "y":
-        return race
-        
-    else:
-        race = ""
-        return race
-
-def race_stat_setup(guy):  #Separate function to avoid clutter
-    if guy.race == "Orc":
-        guy.health = 120
-        guy.max_health = 120
-        guy.energy = 110
-        guy.max_energy = 110
-        guy.arm_eff = 20
-        guy.max_eff = 40
-
-    elif player.race == "Elf":
-        guy.health = 90
-        guy.max_health = 90
-        guy.max_armour = 90
-        guy.e_regen = 6
-
-    elif player.race == "Limka":
-        guy.health = 80
-        guy.max_health = 80
-        guy.max_armour = 70
-        guy.max_eff = 60
-        guy.e_regen = 7
-        guy.dodge = 6
-
+        dmg = int
+        cost = int
+        ammo = int
+        max_ammo = int
+        crit_chance = int
+        crit_bonus = int
 
 ##SHOP
 def weapon_select():    #Selecting weapon for the first time
@@ -200,7 +90,7 @@ def weapon_select():    #Selecting weapon for the first time
 
     #Randomly select 3 melee weapons and ensure that duplicates cannot be drawn
     while len(drawn_weps) < 3:
-        select = melee_weps[random.randint(0,melee_count)]
+        select = random.choice(melee_weps)
         if select not in drawn_weps:
             drawn_weps.append(select)
 
@@ -221,7 +111,7 @@ def weapon_select():    #Selecting weapon for the first time
             choice = int(input("Please choose a weapon from one of the above. "))
                          
             choice -= 1
-            pick_melee(drawn_weps[choice])
+            sh.pick_melee(drawn_weps[choice])
             
             input(player.name+" now wields the "+player.wep.name+". ")
             
@@ -229,9 +119,8 @@ def weapon_select():    #Selecting weapon for the first time
             input("Invalid input! ")
             
         clear()
-        
 
-def shop():
+def shop(guy):
     categories = []
     slots = []
     
@@ -257,22 +146,22 @@ def shop():
         choosing = True
         while choosing == True:
             if categories[x] == "melee":
-                select = melee_weps[random.randint(0,melee_count)]
-                if select not in slots and select[0] != player.wep.name:
+                select = random.choice(melee_weps)
+                if select not in slots and select[0] != guy.wep.name:
                     choosing = False
                     
             elif categories[x] == "ranged":
-                select = ranged_weps[random.randint(0,ranged_count)]
-                if select not in slots and select[0] != player.ranged.name:
+                select = random.choice(ranged_weps)
+                if select not in slots and select[0] != guy.ranged.name:
                     choosing = False
 
             elif categories[x] == "magic":
-                select = magic[random.randint(0,magic_count)]
-                if select not in slots and select[0] not in player.magics:
+                select = random.choice(magic)
+                if select not in slots and select[0] not in guy.magics:
                     choosing = False
 
             else:
-                select = item[random.randint(0,item_count)]
+                select = random.choice(item)
                 if select not in slots: #You are allowed to have multiple of the same item in your inventory, but they still do not appear in the shop twice
                     choosing = False
 
@@ -281,31 +170,32 @@ def shop():
     repeat = True
     
     while repeat == True:
-        print("DREAD SHRINE\n\nYour aspiring champion "+player.name+" kneels before a shrine dedicated to you and humbly asks for boons.\nHere, the aspirant can exchange "+colour.GOLD+"Favour"+colour.END+" for gifts.")
-        print("Four gifts are available to choose from. Choose which one to bestow upon "+player.name+" - provided they have enough "+colour.GOLD+"Favour"+colour.END+".\n\n")
+        print("DREAD SHRINE\n\nYour aspiring champion "+guy.name+" kneels before a shrine dedicated to you and humbly asks for boons.\nHere, the aspirant can exchange "+colour.GOLD+"Favour"+colour.END+" for gifts.")
+        print("Four gifts are available to choose from. Choose which one to bestow upon "+guy.name+" - provided they have enough "+colour.GOLD+"Favour"+colour.END+".\n\n")
 
-        print_shop(slots, categories, True)
+        sh.print_shop(slots, categories, True)
 
         try:
-            print(player.name+" currently has "+colour.GOLD+str(player.favour)+colour.END+" Favour.")
+            print(guy.name+" currently has "+colour.GOLD+str(guy.favour)+colour.END+" Favour.")
             choice = input("Select any of the gifts above to purchase, or type \"n\" if you are done. ")
 
             if choice == "n":
                 repeat = False
+                input("Now equipped for battle, "+guy.name+" seeks out an opponent... ")
                 
             else:
                 choice = int(choice)
                 choice -= 1
 
-            if ((categories[choice] == "melee" and player.favour < slots[choice][7])
-                    or (categories[choice] == "ranged" and player.favour < slots[choice][6])
-                    or (categories[choice] == "magic" and player.favour < slots[choice][6])
-                    or (categories[choice] == "item" and player.favour < slots[choice][4])):
-                input(player.name+" does not have enough "+colour.GOLD+"Favour"+colour.END+" for the "+slots[choice][0]+"! ")
+            if ((categories[choice] == "melee" and guy.favour < slots[choice][7])
+                    or (categories[choice] == "ranged" and guy.favour < slots[choice][6])
+                    or (categories[choice] == "magic" and guy.favour < slots[choice][6])
+                    or (categories[choice] == "item" and guy.favour < slots[choice][4])):
+                input(guy.name+" does not have enough "+colour.GOLD+"Favour"+colour.END+" for the "+slots[choice][0]+"! ")
             else:
-                cont = acquire(slots[choice],categories[choice])
+                cont = sh.acquire(slots[choice],categories[choice], guy)
                 if cont == True:
-                    input(player.name+" has acquired the "+slots[choice][0]+". ")
+                    input(guy.name+" has acquired the "+slots[choice][0]+". ")
                     slots.pop(choice)
             
         except:
@@ -313,213 +203,61 @@ def shop():
 
         clear()
 
-def acquire(slot,cat):
-    if cat == "melee":  #Player will always have a melee weapon, so always ask for confirmation
-        print("Taking the "+slot[0]+" will replace the currently equipped "+player.wep.name+".\nThe "+player.wep.name+"'s stats are listed below for comparison.\n")
-        display_melee(player)
-        
-        approve = input("\nAre you sure you want to buy the "+slot[0]+"? ")
-        approve = approve.lower()
-        if approve == "y" or approve == "yes":
-            pick_melee(slot)
-            cont = True
-        else:
-            cont = False
-        
-    elif cat == "ranged" and not player.ranged.name == "":  #Only ask for confirmation if player has a ranged weapon
-        print("Taking the "+slot[0]+" will replace the currently equipped "+player.ranged.name+".\nThe "+player.ranged.name+"'s stats are listed below for comparison.\n")
-        display_ranged(player)
-
-        approve = input("\nAre you sure you want to buy the "+slot[0]+"? ")
-        approve = approve.lower()
-        if approve == "y" or approve == "yes":
-            pick_ranged(slot)
-            cont = True
-        else:
-            cont = False
+###SET UP OPPONENT FOR BATTLE
+#Generate basics
+def create_opp():
+    #Generate name - first decide whether male or female
+    pick_gender = random.randint(1,3)
     
-    elif cat == "magic" and len(player.magics) == 3:    #Only ask for confirmation if player is at maximum 3 magics
-        clear() #This confirmation takes up a lot of space, so clear the screen and enter a "new window"
-        print(player.name+" is trying to acquire a new magical technique, but they already have the maximum of three. One must be discarded to continue.")
-        print("The technique "+player.name+" is trying to acquire is:\n")
-        print(slot[0], end="")
-        display_magic_name(slot)
-        display_magic_stats(slot)
-        print("\nThe techniques "+player.name+"already has are:\n")
+    if pick_gender < 3: #2/3 chance to be male
+        opp_name = random.choice(male_names)
+    else:   #1/3 chance to be female
+        opp_name = random.choice(female_names)
 
-        for x in range(0,len(player.magics)):
-            print(str(x+1)+". "+player.magics[x][0], end="")
-            display_magic_name(player.magics[x])
-            display_magic_stats(player.magics[x])
-            print("")
-        
-        approve = input("Choose the number of the technique to discard, or type anything else to cancel. ")
-        try:
-            approve = int(approve)
-            approve -= 1
-            player.magics.pop(approve)
-            player.magics.append(slot)
-            cont = True
-        except:
-            cont = False
+    #Generate race
+    #This is not a random 1/4 chance but rather is weighted (both for gameplay and lore reasons); you are most likely to see humans
+    pick_race = random.randint(1,10)
 
-    elif cat == "item" and len(player.items) == 5:  #Only ask for confirmation if player is at maximum 5 items
-        clear() #This confirmation takes up a lot of space, so clear the screen and enter a "new window"
-        print(player.name+" is trying to acquire a new item, but they already have the maximum of five. One must be discarded to continue.")
-        print("The item "+player.name+" is trying to acquire is:\n")
-        print(slot[0], end="")
-        display_item_name(slot)
-        display_item_stats(slot)
-        print("\nThe items "+player.name+"already has are:\n")
+    if pick_race in range(1,4): #40%
+        opp_race = "Human"
+    elif pick_race in range(5,6):  #20%
+        opp_race = "Orc"
+    elif pick_race in range(7,8):  #20%
+        opp_race = "Elf"
+    else:                       #20%
+        opp_race = "Limka"
 
-        for x in range(0,len(player.items)):
-            print(str(x+1)+". "+player.items[x][0], end="")
-            display_item_name(player.items[x])
-            display_item_stats(player.items[x])
-            print("")
-        
-        approve = input("Choose the number of the item to discard, or type anything else to cancel. ")
-        try:
-            approve = int(approve)
-            approve -= 1
-            player.items.pop(approve)
-            player.items.append(slot)
-            cont = True
-        except:
-            cont = False
-            
-    else:   #If there is nothing to confirm then go right ahead
-        cont = True
+    return opp_name, opp_race
 
-    return cont
+#Assign ranged weapon to opp
+def generate_ranged(guy, wep):
+    #3/4 chance to have a ranged weapon, 1/4 chance to not have one (function does nothing in this case)
+    roll = random.randint(1,4)
+    if roll < 4:
+        while guy.ranged.name == "":
+            pick_wep = random.choice(wep)
+            if pick_wep[7] == "free":   #Only assign ranged weapon to opp if it's not banned for opps
+                sh.pick_ranged(pick_wep, guy)
 
+#Assign magic to opp
+def generate_magics(guy, mag):
+    #Weighted chance to generate magic; most likely to have two
+    roll = random.randint(1,10)
 
-def pick_melee(equip):
-    player.wep.name = equip[0]
-    player.wep.light_dmg = equip[1]
-    player.wep.heavy_dmg = equip[2]
-    player.wep.light_cost = equip[3]
-    player.wep.heavy_cost = equip[4]
-    player.wep.crit_chance = equip[5]
-    player.wep.crit_bonus = equip[6]
+    if roll in range(1,3):  #30%
+        roll_magic = 1
+    elif roll in range(4,8):    #50%
+        roll_magic = 2
+    else:                   #20%
+        roll_magic = 3
 
-def pick_ranged(equip):
-    player.ranged.name = equip[0]
-    player.ranged.dmg = equip[1]
-    player.ranged.cost = equip[2]
-    player.ranged.ammo = equip[3]
-    player.ranged.max_ammo = equip[3]
-    player.ranged.crit_chance = equip[4]
-    player.ranged.crit_bonus = equip[5]
+    for x in range(1,roll_magic):   #Ensure no duplicate magic
+        while True:
+            pick_magic = random.choice(mag)
+            if pick_magic not in guy.magics:
+                break
+        guy.magics.append(pick_magic)
 
-
-###PRINTING FUNCTIONS
-    
-#Display stats of weapons
-def display_melee(guy):
-    print("\tLight Attack Damage: "+colour.RED+str(guy.wep.light_dmg)+colour.END)
-    print("\tLight Attack Energy Cost: "+colour.BLUE+str(guy.wep.light_cost)+colour.END)
-    print("\tHeavy Attack Damage: "+colour.RED+str(guy.wep.heavy_dmg)+colour.END)
-    print("\tHeavy Attack Energy Cost: "+colour.BLUE+str(guy.wep.heavy_cost)+colour.END)
-    print("\tCritical Strike Chance: "+colour.GOLD+str(guy.wep.crit_chance)+"%"+colour.END)
-    print("\tCritical Damage Bonus: "+colour.RED+str(guy.wep.crit_bonus)+"%"+colour.END)
-
-def display_ranged(guy):
-    print("\tDamage: "+colour.RED+str(guy.ranged.dmg)+colour.END)
-    print("\tEnergy Cost: "+colour.BLUE+str(guy.ranged.cost)+colour.END)
-    print("\tAmmunition: "+colour.CYAN+str(guy.ranged.ammo)+colour.END+"/"+colour.CYAN+str(guy.ranged.max_ammo)+colour.END)
-    print("\tCritical Shot Chance: "+colour.GOLD+str(guy.ranged.crit_chance)+"%"+colour.END)
-    print("\tCritical Damage Bonus: "+colour.RED+str(guy.ranged.crit_bonus)+"%"+colour.END)
-
-def display_magic_name(mage):
-    if mage[1] == "plasma":
-        print(" (Plasma Magic)")
-    elif mage[1] == "shadow":
-        print(" (Shadow Magic)")
-    elif mage[1] == "plague":
-        print(" (Plague Magic)")
-    elif mage[1] == "frost":
-        print(" (Frost Magic)")
-    elif mage[1] == "heal":
-        print(" (Healing Magic)")
-    else:
-        print(" (Shield Magic)")
-
-def display_magic_stats(mage):  
-    if mage[1] == "plasma" or mage[1] == "shadow" or mage[1] == "plague" or mage[1] == "frost":
-        print("\tDamage: "+colour.RED+str(mage[2])+colour.END)
-    elif mage[1] == "heal":
-        print("\tHealing: "+colour.GREEN+str(mage[2])+colour.END)
-    else:
-        print("\tArmour: "+colour.PURPLE+str(mage[2])+colour.END)
-
-    if mage[4] > 0:
-        print("\tDamage over Time: "+colour.RED+str(mage[4])+colour.END)
-        print("\tDamage over Time Duration: "+colour.RED+str(mage[5])+colour.END+" turns")
-
-def display_item_name(thing):
-    if thing[1] == "armour":
-        print(" (Armour)")
-    else:
-        print(" (Item)")
-
-def display_item_stats(thing):
-    if thing[1] == "dmg":
-        print("\tDamage: "+colour.RED+str(thing[2])+colour.END)
-    elif thing[1] == "heal":
-        print("\tHealing: "+colour.GREEN+str(thing[2])+colour.END)
-    elif thing[1] == "energy":
-        print("\tEnergy Restored: "+colour.BLUE+str(thing[2])+colour.END)
-    elif thing[1] == "armour":
-        print("\tArmour: "+colour.PURPLE+str(thing[2])+colour.END)
-    else:
-        print("\tFavour Gain: "+colour.GOLD+str(thing[2])+colour.END)
-
-    if thing[3] > 0:
-        print("\tArmour Efficiency Added: "+colour.PURPLE+str(thing[3])+"%"+colour.END)
-
-#Print out things available in shop
-def print_shop(slots, categories, showcost):
-    for x in range (0,len(slots)):
-        g = 6   #the list position that favour cost is stored in
-        
-        print(str(x+1)+". "+slots[x][0], end="")
-
-        #Compare slots list to categories list to display information correctly
-        #Both melee and ranged display functions take variables from Char class and not list so they cant be used here
-        if categories[x] == "melee":
-            g = 7
-            print(" (Melee Weapon)")
-            print("\tLight Attack Damage: "+colour.RED+str(slots[x][1])+colour.END)
-            print("\tLight Attack Energy Cost: "+colour.BLUE+str(slots[x][3])+colour.END)
-            print("\tHeavy Attack Damage: "+colour.RED+str(slots[x][2])+colour.END)
-            print("\tHeavy Attack Energy Cost: "+colour.BLUE+str(slots[x][4])+colour.END)
-            print("\tCritical Strike Chance: "+colour.GOLD+str(slots[x][5])+"%"+colour.END)
-            print("\tCritical Damage Bonus: "+colour.RED+str(slots[x][6])+"%"+colour.END)
-            
-        elif categories[x] == "ranged":
-            print(" (Ranged Weapon)")
-            print("\tDamage: "+colour.RED+str(slots[x][1])+colour.END)
-            print("\tEnergy Cost: "+colour.BLUE+str(slots[x][2])+colour.END)
-            print("\tAmmunition: "+colour.CYAN+str(slots[x][3])+colour.END)
-            print("\tCritical Shot Chance: "+colour.GOLD+str(slots[x][4])+"%"+colour.END)
-            print("\tCritical Damage Bonus: "+colour.RED+str(slots[x][5])+"%"+colour.END)
-
-        #this can be done through functions
-        elif categories[x] == "magic":
-            display_magic_name(slots[x])
-            display_magic_stats(slots[x])
-
-        #so can this
-        else:
-            g = 4
-            display_item_name(slots[x])
-            display_item_stats(slots[x])
-
-        if showcost == True:
-            print("\tFavour Cost: "+colour.GOLD+str(slots[x][g])+colour.END)
-
-        print("\n")
 
 
 ###GAME START
@@ -530,10 +268,34 @@ if len(player_name) < 3:
     print("")
     while len(player_name) < 3:
         player_name = input("Your champion's name must be at least three letters long. ")
-player_race = choose_race()
+player_race = r.choose_race()
 player = Char(player_name,player_race)
-race_stat_setup(player)
+r.race_stat_setup(player)
 input("\nAnd so, "+player.name+" the "+player.race+" enters the fray. ")
 clear()
 weapon_select()
-shop()
+
+
+###CORE GAMEPLAY LOOP
+while player.health > 0:
+    shop(player)
+
+    #Set up opponent
+    opp_name, opp_race = create_opp()
+    opp = Char(opp_name, opp_race)
+    r.race_stat_setup(opp)
+
+    #Opponent max energy is always reduced by 10
+    opp.max_energy -= 10
+    opp.energy -= 10
+    
+    sh.pick_melee(random.choice(melee_weps), opp)  #Randomly choose melee weapon - this doesn't need a function
+    opp.wep.crit_chance -= 1    #Critical chance for opps is always reduced by 1
+    if opp.wep.crit_chance < 1: #However base crit chance can never be lower than 1%
+        opp.wep.crit_chance = 1
+    
+    generate_ranged(opp, ranged_weps)   #Randomly choose a non-banned ranged weapon, 25% chance for no ranged
+
+    generate_magics(opp, magic)    #Randomly generate 1-3 magic techniques
+
+    #Do the battle

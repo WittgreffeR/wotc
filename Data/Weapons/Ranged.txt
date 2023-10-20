@@ -1,5 +1,6 @@
-Longbow,20,10,12,4,10,11
-Shortbow,10,5,20,5,30,10
-Crossbow,20,9,12,3,10,14
-Brace of Pistols,30,8,4,6,20,15
-Javelin,30,14,2,20,30,13
+Longbow,20,10,12,4,10,11,free
+Shortbow,10,5,16,5,30,10,free
+Crossbow,20,9,12,3,10,14,free
+Brace of Pistols,30,7,4,6,20,15,ban
+Javelin,30,14,2,20,30,13,ban
+Sling,9,5,20,6,50,10,free
