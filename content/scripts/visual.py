@@ -16,4 +16,4 @@ class colour:   #Colours only display properly when run directly from the file, 
     PURPLE = "\033[95m"     #Armour
     END = "\033[0m"         #Stop use of colour (return to white)
     
-#Colours are used like this:    "text"+colour.RED+"text"+colour.END
+#Colours are used like this:    f"text{colour.RED}text{colour.END}"

@@ -187,7 +187,7 @@ def generate_magics(guy, mag):
 
 ###GAME START
 clear() #For some reason this has to be here in order to make text colours work on the start screen
-print("Welcome to "+colour.GOLD+"War of the Champions"+colour.END+", a turn-based roguelike battle game where you are a Dread Titan nurturing a prospective champion by testing their resolve against many enemies.")
+print(f"Welcome to {colour.GOLD}War of the Champions{colour.END}, a turn-based roguelike battle game where you are a Dread Titan nurturing a prospective champion by testing their resolve against many enemies.")
 player_name = input("\nBefore your champion can go to battle, they must first have a name. Many champions abandon their old names and take up new ones upon swearing themselves to a Titan.\n\nWhat shall your champion be known as? ")
 if len(player_name) < 3:
     print("")
