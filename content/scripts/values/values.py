@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterable, Optional
+from typing import Any, Iterable, Optional
 
 
 @dataclass
@@ -64,6 +64,9 @@ class RangedWep(WeaponBase):
 
 @dataclass
 class Char:
+    name: str
+    race: str
+
     health: int
     max_health: int
     armour: int
@@ -77,10 +80,6 @@ class Char:
     favour: int
 
     melee_weapon: MeleeWep
-    ranged_weapon: RangedWep
-
-    def __init__(self, name, race):
-        self.name = name
-        self.race = race
-        self.magics = []
-        self.items = []
+    ranged_weapon: Optional[RangedWep] = None
+    magics: Iterable[Any]
+    items: Iterable[Any]
