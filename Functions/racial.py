@@ -1,5 +1,4 @@
-from Functions.visual import clear
-from Functions.visual import colour
+from wotc.content.scripts.visual import clear, colour
 
 def choose_race():
     player_race = ""
@@ -42,8 +41,8 @@ def choose_race():
     return player_race
     
 
-def confirm_race(race):     #Defined as a seprate function to avoid repeating myself
-    confirm = input("\nAre you sure you want to continue as a "+race+"? ")
+def confirm_race(race):
+    confirm = input(f"\nAre you sure you want to continue as a {race}? ")
     confirm = confirm.lower()
 
     if confirm == "yes" or confirm == "y":
@@ -53,7 +52,22 @@ def confirm_race(race):     #Defined as a seprate function to avoid repeating my
         race = ""
         return race
 
-def race_stat_setup(guy):  #Separate function to avoid clutter - also used later for assigning racial stats for opponent
+
+def race_stat_setup(guy):  #Also used later for assigning racial stats for opponent
+    # Defaults
+    health = 100
+    max_health = 100
+    armour = 0
+    max_armour = 100
+    arm_eff = 30   #Armour efficiency in percent
+    max_eff = 50   #Maximum armour efficiency
+    energy = 100
+    max_energy = 100
+    energy_regen = 5
+    dodge = 4      #Dodge chance in percent
+    favour = 20
+
+
     if guy.race == "Orc":
         guy.health = 120
         guy.max_health = 120

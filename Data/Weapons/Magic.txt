@@ -1,4 +1,0 @@
-Cast Shield,shield,20,20,0,0,8
-Sturdy Magical Shield,shield,30,30,0,0,12
-Close Wounds,heal,15,10,0,0,10
-Healing Burst,heal,20,20,0,0,14

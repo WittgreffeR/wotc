@@ -1,5 +1,5 @@
 import Functions.display as display
-from Functions.visual import colour, clear
+from wotc.content.scripts.visual import colour, clear
 
 def acquire(slot,cat,guy):
     if cat == "melee":  #Player will always have a melee weapon, so always ask for confirmation
@@ -13,7 +13,7 @@ def acquire(slot,cat,guy):
             cont = True
         else:
             cont = False
-    
+
     elif cat == "ranged" and not guy.ranged.name == "":  #Only ask for confirmation if player has a ranged weapon
         print("Taking the "+slot[0]+" will replace the currently equipped "+guy.ranged.name+".\nThe "+guy.ranged.name+"'s stats are listed below for comparison.\n")
         display.ranged(guy)

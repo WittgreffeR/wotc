@@ -1,0 +1,6 @@
+{"name": "Longbow", "dmg": 20, "cost": 10, "ammo": 12, "crit_chance": 4, "crit_bonus": 10, "favour_cost": 11}
+{"name": "Shortbow", "dmg": 10, "cost": 5, "ammo": 16, "crit_chance": 5, "crit_bonus": 30, "favour_cost": 10}
+{"name": "Crossbow", "dmg": 20, "cost": 9, "ammo": 12, "crit_chance": 3, "crit_bonus": 10, "favour_cost": 14}
+{"name": "Sling", "dmg": 9, "cost": 6, "ammo": 20, "crit_chance": 10, "crit_bonus": 50, "favour_cost": 10}
+{"name": "Brace of Pistols", "dmg": 30, "cost": 6, "ammo": 4, "crit_chance": 6, "crit_bonus": 20, "favour_cost": 15, "ban": "ban"}
+{"name": "Javelin", "dmg": 30, "cost": 14, "ammo": 2, "crit_chance": 25, "crit_bonus": 30, "favour_cost": 13, "ban": "ban"}

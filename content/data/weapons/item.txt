@@ -1,0 +1,12 @@
+{"name": "Weak Healing Potion", "heal": 10, "favour_cost": 5}
+{"name": "Throwing Knife", "dmg": 20, "favour_cost": 6}
+{"name": "Sharp Rock", "dmg": 10, "favour_cost": 3}
+{"name": "Grenade", "dmg": 35, "favour_cost": 10}
+{"name": "Weak Stamina Potion", "energy": 10, "favour_cost": 5}
+{"name": "Bitter Black Brew", "energy": 20, "favour_cost": 6}
+{"name": "Sweet Treat", "energy": 8, "favour_cost": 2}
+{"name": "Cheap Mail", "armour": 10, "favour_cost": 5}
+{"name": "Riveted Mail", "armour": 25, "favour_cost": 9}
+{"name": "Welded Mail", "armour": 32, "armour_eff": 2, "favour_cost": 12}
+{"name": "Sacred Statuette", "favour_gain": 1, "favour_cost": 5}
+{"name": "Graven Image", "favour_gain": 1, "favour_cost": 6}

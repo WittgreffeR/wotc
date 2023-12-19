@@ -1,0 +1,6 @@
+{"name": "Arming Sword", "light_dmg": 10, "heavy_dmg": 15, "light_cost": 8, "heavy_cost": 16, "crit_chance": 4, "crit_bonus": 20, "favour_cost": 13}
+{"name": "Sabre", "light_dmg": 11, "heavy_dmg": 16, "light_cost": 8, "heavy_cost": 16, "crit_chance": 4, "crit_bonus": 10, "favour_cost": 14}
+{"name": "Rapier", "light_dmg": 9, "heavy_dmg": 16, "light_cost": 7, "heavy_cost": 16, "crit_chance": 6, "crit_bonus": 30, "favour_cost": 17}
+{"name": "Dagger", "light_dmg": 5, "heavy_dmg": 10, "light_cost": 3, "heavy_cost": 10, "crit_chance": 10, "crit_bonus": 50, "favour_cost": 8}
+{"name": "Mace", "light_dmg": 12, "heavy_dmg": 20, "light_cost": 10, "heavy_cost": 20, "crit_chance": 4, "crit_bonus": 10, "favour_cost": 14}
+{"name": "Axe", "light_dmg": 13, "heavy_dmg": 19, "light_cost": 10, "heavy_cost": 20, "crit_chance": 5, "crit_bonus": 20, "favour_cost": 15}

@@ -1,88 +1,13 @@
-#Core
 import random
-import os
 
-#Modular functions stored in Functions folder to reduce clutter in this main script
-import Functions.text_import as ti
-import Functions.racial as r
-import Functions.display as display
-import Functions.shop as sh
-from Functions.visual import clear, colour  #I don't want clear and colour to have a prefix
+from content.scripts.visual import clear, colour
 
-###READ FROM TXT FILES
-male_names = ti.read_from_file("Data/Names/MaleNames.txt")
-
-female_names = ti.read_from_file("Data/Names/FemaleNames.txt")
-
-melee_weps = []
-ti.file_to_list("Data/Weapons/Melee.txt",melee_weps,1,8)
-
-#Melee weapon values in file:
-#[name,light_dmg,heavy_dmg,light_cost,heavy_cost,crit_chance,crit_bonus,favour]
+from content.scripts.values.values import Char
+from content.scripts.values.initialise_values import initialise_values
 
 
-ranged_weps = []
-ti.file_to_list("Data/Weapons/Ranged.txt",ranged_weps,1,7)
+values = initialise_values()
 
-#Ranged weapon values in file:
-#[name,dmg,cost,ammo,crit_chance,crit_bonus,favour,free/ban]
-#Some ranged weapons are banned for opponents, this is what free/ban means
-#Technically only the "free" matters, any other entry than "free" in slot 7 is read as banned
-
-
-magic = []
-ti.file_to_list("Data/Weapons/Magic.txt",magic,2,7)
-
-#Magic values in file:
-#[name,type,cost,dmg/heal/armour, dot, dot duration,favour]
-#Types: plasma, shadow, plague, frost, heal, shield
-
-
-item = []
-ti.file_to_list("Data/Weapons/Item.txt",item,2,5)
-
-#Item values in file:
-#[name,type,dmg/heal/energy/armour/favour gain, armour efficiency,favour]
-#Types: dmg, heal, energy, armour,favour
-
-
-###CHARACTER SETUP
-class Char:
-    health = 100
-    max_health = 100
-    armour = 0
-    max_armour = 100
-    arm_eff = 30   #Armour efficiency - how much damage armour absorbs
-    max_eff = 50   #Maximum armour efficiency
-    energy = 100
-    max_energy = 100
-    e_regen = 5    #Energy regeneration per turn
-    dodge = 4      #Dodge chance
-    favour = 20
-
-    def __init__(self, name, race):
-        self.name = name
-        self.race = race
-        self.magics = []
-        self.items = []
-
-    class wep:  #melee weapon
-        name = ""
-        light_dmg = int
-        heavy_dmg = int
-        light_cost = int
-        heavy_cost = int
-        crit_chance = int
-        crit_bonus = int
-
-    class ranged:   #ranged weapon
-        name = ""
-        dmg = int
-        cost = int
-        ammo = int
-        max_ammo = int
-        crit_chance = int
-        crit_bonus = int
 
 ##SHOP
 def weapon_select():    #Selecting weapon for the first time
