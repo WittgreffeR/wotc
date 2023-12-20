@@ -1,5 +1,5 @@
 import Functions.display as display
-from wotc.content.scripts.visual import colour, clear
+from content.scripts.visual import colour, clear
 
 def acquire(slot,cat,guy):
     if cat == "melee":  #Player will always have a melee weapon, so always ask for confirmation

@@ -35,7 +35,7 @@ class Magic(EquipmentBase):
     dmg: Optional[int] = None
     heal: Optional[int] = None
     armour: Optional[int] = None
-    dot: Optional[int] = None
+    dot: Optional[int] = None   # Damage Over Time
     dot_duration: Optional[int] = None
 
 
@@ -68,18 +68,21 @@ class Char:
     race: str
 
     health: int
-    max_health: int
-    armour: int
-    max_armour: int
-    arm_eff: int    #Armour efficiency in percent
-    max_eff: int    #Maximum armour efficiency
-    energy: int
-    max_energy: int
-    energy_regen: int
-    dodge: int      #Dodge chance in percent
-    favour: int
+    health_max: int
 
-    melee_weapon: MeleeWep
-    ranged_weapon: Optional[RangedWep] = None
+    # Equipment
     magics: Iterable[Any]
     items: Iterable[Any]
+    melee_weapon: Optional[RangedWep] = None
+    ranged_weapon: Optional[RangedWep] = None
+
+    # Values with defaults
+    armour: int = 0
+    armour_max: int = 100
+    armour_eff: int = 30
+    armour_eff_max: int = 50
+    dodge: int = 4
+    favour: int = 20
+    energy: int = 100
+    energy_max: int = 100
+    energy_regen: int = 5

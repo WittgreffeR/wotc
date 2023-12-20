@@ -1,15 +1,23 @@
-from wotc.content.scripts.visual import clear, colour
+from ..visual import colour, clear
 
-def choose_race():
+from ..values.values import Char
+from .race_setup import char_setup_from_race
+
+
+def setup_player(player_name: str) -> Char:
+    return char_setup_from_race(player_name, choose_race_dialog())
+
+
+def choose_race_dialog() -> str:
     player_race = ""
 
     while player_race == "":
         clear()
-        print("""As a Dread Titan, you can draw from any of the mortal races to create a new champion.\n
-        """+colour.GOLD+"""Humans"""+colour.END+""" are mundane and average, but are great in numbers and are known for their tenacity and adaptability.\n
-        """+colour.GOLD+"""Orcs"""+colour.END+""" are strong and hardy, but their intimidating size also makes them an easy target.\n
-        """+colour.GOLD+"""Elves"""+colour.END+""" are slender and a little frail, but are blessed with magic and impressive stamina.\n
-        """+colour.GOLD+"""Limkas"""+colour.END+""" are small in stature, but are agile and nimble.\n
+        print(f"""As a Dread Titan, you can draw from any of the mortal races to create a new champion.\n
+        {colour.GOLD}Humans{colour.END} are mundane and average, but are great in numbers and are known for their tenacity and adaptability.\n
+        {colour.GOLD}Orcs{colour.END} are strong and hardy, but their intimidating size also makes them an easy target.\n
+        {colour.GOLD}Elves{colour.END} are slender and a little frail, but are blessed with magic and impressive stamina.\n
+        {colour.GOLD}Limkas{colour.END} are small in stature, but are agile and nimble.\n
         """)
         player_race = input("What race does your champion hail from? ")
         player_race = player_race.lower()
@@ -39,9 +47,9 @@ def choose_race():
             input("\nInput not recognised. ")
 
     return player_race
-    
 
-def confirm_race(race):
+
+def confirm_race(race: str) -> str:
     confirm = input(f"\nAre you sure you want to continue as a {race}? ")
     confirm = confirm.lower()
 
@@ -49,43 +57,4 @@ def confirm_race(race):
         return race
         
     else:
-        race = ""
-        return race
-
-
-def race_stat_setup(guy):  #Also used later for assigning racial stats for opponent
-    # Defaults
-    health = 100
-    max_health = 100
-    armour = 0
-    max_armour = 100
-    arm_eff = 30   #Armour efficiency in percent
-    max_eff = 50   #Maximum armour efficiency
-    energy = 100
-    max_energy = 100
-    energy_regen = 5
-    dodge = 4      #Dodge chance in percent
-    favour = 20
-
-
-    if guy.race == "Orc":
-        guy.health = 120
-        guy.max_health = 120
-        guy.energy = 110
-        guy.max_energy = 110
-        guy.arm_eff = 20
-        guy.max_eff = 40
-
-    elif guy.race == "Elf":
-        guy.health = 90
-        guy.max_health = 90
-        guy.max_armour = 90
-        guy.e_regen = 6
-
-    elif guy.race == "Limka":
-        guy.health = 80
-        guy.max_health = 80
-        guy.max_armour = 70
-        guy.max_eff = 60
-        guy.e_regen = 7
-        guy.dodge = 6
+        return ""

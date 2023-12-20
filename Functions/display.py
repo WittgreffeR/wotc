@@ -1,4 +1,4 @@
-from wotc.content.scripts.visual import colour
+from content.scripts.visual import colour
 
 def melee(guy):
     print("\tLight Attack Damage: "+colour.RED+str(guy.wep.light_dmg)+colour.END)

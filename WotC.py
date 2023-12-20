@@ -5,6 +5,8 @@ from content.scripts.visual import clear, colour
 from content.scripts.values.values import Char
 from content.scripts.values.initialise_values import initialise_values
 
+from content.scripts.char_setup.player_setup import setup_player
+
 
 values = initialise_values()
 
@@ -185,23 +187,25 @@ def generate_magics(guy, mag):
 
 
 
-###GAME START
-clear() #For some reason this has to be here in order to make text colours work on the start screen
+### GAME START ###
+
+clear() # For some reason this has to be here in order to make text colours work on the start screen
 print(f"Welcome to {colour.GOLD}War of the Champions{colour.END}, a turn-based roguelike battle game where you are a Dread Titan nurturing a prospective champion by testing their resolve against many enemies.")
 player_name = input("\nBefore your champion can go to battle, they must first have a name. Many champions abandon their old names and take up new ones upon swearing themselves to a Titan.\n\nWhat shall your champion be known as? ")
 if len(player_name) < 3:
     print("")
     while len(player_name) < 3:
         player_name = input("Your champion's name must be at least three letters long. ")
-player_race = r.choose_race()
-player = Char(player_name,player_race)
-r.race_stat_setup(player)
-input("\nAnd so, "+player.name+" the "+player.race+" enters the fray. ")
+
+player = setup_player(player_name)
+
+input(f"\nAnd so, {player.name} the {player.race} enters the fray. ")
 clear()
+
 weapon_select()
 
 
-###CORE GAMEPLAY LOOP
+### CORE GAMEPLAY LOOP ###
 while player.health > 0:
     shop(player)
 
