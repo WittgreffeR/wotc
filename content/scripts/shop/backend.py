@@ -5,7 +5,7 @@ from ..visual import colour, clear
 from ...config.settings import MAX_MAGICS, MAX_ITEMS
 from ..values.values import Char, Values, MeleeWep, RangedWep, Magic, Item
 from ..display.service import display_boons
-from ..display.backend import (
+from ..display.specific import (
     display_melee_weapon,
     display_ranged_weapon,
     display_magic,
