@@ -5,6 +5,7 @@ from ..visual import colour, clear
 
 from ..values.values import Char, Values, MeleeWep
 from .race_setup import char_setup_from_race
+from ..shop.display import display_melee_weapon
 
 
 def setup_player(values: Values) -> Char:
@@ -116,10 +117,5 @@ def _draw_first_melee_weapons(values: Values) -> Iterable["MeleeWep"]:
 
 def _print_out_weapon_stats(wep: int, weapon: MeleeWep) -> None:
     print(f"{wep+1}. {weapon.name}")
-    print(f"\tLight Attack Damage: {colour.RED}{weapon.light_dmg}{colour.END}")
-    print(f"\tLight Attack Energy Cost: {colour.BLUE}{weapon.light_cost}{colour.END}")
-    print(f"\tHeavy Attack Damage: {colour.RED}{weapon.heavy_dmg}{colour.END}")
-    print(f"\tHeavy Attack Energy Cost: {colour.BLUE}{weapon.heavy_cost}{colour.END}")
-    print(f"\tCritical Strike Chance: {colour.GOLD}{weapon.crit_chance}{colour.END}")
-    print(f"\tCritical Damage Bonus: {colour.RED}{weapon.crit_bonus}{colour.END}")
+    display_melee_weapon(weapon)
     print("\n")

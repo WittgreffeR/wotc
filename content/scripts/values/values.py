@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, Optional
+from typing import Iterable, Optional
 
 
 @dataclass
@@ -30,7 +30,7 @@ class Item(EquipmentBase):
 
 @dataclass
 class Magic(EquipmentBase):
-    type: str   # Types of damaging magic: plasma, shadow, plague, frost
+    type: str
     cost: int
     dmg: Optional[int] = None
     heal: Optional[int] = None
@@ -71,8 +71,8 @@ class Char:
     health_max: int
 
     # Equipment
-    magics: Iterable[Any]
-    items: Iterable[Any]
+    magics: Iterable[Magic]
+    items: Iterable[Item]
     melee_weapon: Optional[RangedWep] = None
     ranged_weapon: Optional[RangedWep] = None
 

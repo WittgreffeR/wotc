@@ -1,4 +1,4 @@
-{"name": "Cast Shield", "type": "shield", "cost": 20, "armour": 20, "favour_cost": 8}
-{"name": "Sturdy Magical Shield", "type": "shield", "cost": 30, "armour": 30, "favour_cost": 12}
-{"name": "Close Wounds", "type": "heal", "cost": 15, "heal": 10, "favour_cost": 10}
-{"name": "Healing Burst", "type": "heal", "cost": 20, "heal": 20, "favour_cost": 14}
+{"name": "Cast Shield", "type": "Shield", "cost": 20, "armour": 20, "favour_cost": 8}
+{"name": "Sturdy Magical Shield", "type": "Shield", "cost": 30, "armour": 30, "favour_cost": 12}
+{"name": "Close Wounds", "type": "Healing", "cost": 15, "heal": 10, "favour_cost": 10}
+{"name": "Healing Burst", "type": "Healing", "cost": 20, "heal": 20, "favour_cost": 14}
