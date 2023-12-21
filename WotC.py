@@ -4,6 +4,7 @@ from content.scripts.values.initialise_values import initialise_values
 
 from content.scripts.char_setup import setup_player, create_opp
 from content.scripts.shop.service import shop
+from content.scripts.battle.service import battle
 
 
 values = initialise_values()
@@ -22,6 +23,4 @@ player = setup_player(values)
 while player.health > 0:
     player = shop(player, values)
 
-    opp = create_opp(values)
-
-    #Do the battle
+    player = battle(player, create_opp(values))
