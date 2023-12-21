@@ -5,7 +5,7 @@ from ..visual import colour, clear
 
 from ..values.values import Char, Values, MeleeWep
 from .race_setup import char_setup_from_race
-from ..shop.display import display_melee_weapon
+from ..display.specific import display_melee_weapon
 
 
 def setup_player(values: Values) -> Char:
